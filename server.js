@@ -142,6 +142,19 @@ app.delete('/delete_files', (req, res) => {
 
 default_connect();
 
+/*
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+});
+*/
+
+// HTTPS 서버 설정
+const sslOptions = {
+  key: fs.readFileSync('./privkey.pem'), // 개인 키 파일
+  cert: fs.readFileSync('./cert.pem'), // SSL/TLS 인증서 파일
+};
+
+// HTTPS 서버 시작
+https.createServer(sslOptions, app).listen(PORT, () => {
+  console.log(`HTTPS Server running on ${PORT}`);
 });
