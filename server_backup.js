@@ -14,17 +14,17 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
 const HOST = process.env.HOST;
-const MONGO_PORT = process.env.MONGO_PORT;
-const AUTH_USER = process.env.AUTH_USER;
-const AUTH_PASSWORD = process.env.AUTH_PASSWORD;
-const READ_WRITE_USER = process.env.READ_WRITE_USER;
-const READ_WRITE_PASSWORD = process.env.READ_WRITE_PASSWORD;
 
 // Middleware
-app.use(express.json());
+app.use(express.json({
+  limit : "1mb"
+}));
 app.use(cors()); // CORS 미들웨어 사용
 
-app.use(express.urlencoded({ extended: false })); // 내부 url 파서 사용
+app.use(express.urlencoded({
+  limit:"1mb",
+  extended: false
+}));
 app.use(express.static(path.join(__dirname + '/public'))); // 정적 파일 위치 설정
 
 // 기본 경로 라우트
