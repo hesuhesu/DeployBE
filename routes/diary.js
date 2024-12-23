@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
 });
 
 // 글 하나 조회
-router.get("/read", async (req, res) => {
+router.get("/read_detail", async (req, res) => {
     try {
         const diary = await Diary.findOne({ _id : req.query._id });
         res.json({ list: diary });
@@ -24,6 +24,45 @@ router.get("/all_read", async(req, res) => {
     } catch (error) {
         console.log(error);
         res.json({ message: false });
+    }
+});
+
+router.get("/one_page_read", async(req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1; // 현재 페이지 (기본값: 1)
+        const limit = parseInt(req.query.limit) || 10; // 한 페이지당 아이템 수 (기본값: 10)
+        const skip = (page - 1) * limit; // 건너뛸 문서 수
+
+        var diaries, totalDiaries;
+
+        if (req.query.category === '전체'){
+            diaries = await Diary.find()
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 });
+            totalDiaries = await Diary.countDocuments();
+        }
+        else {
+            diaries = await Diary.find({ category : req.query.category })
+            .skip(skip)
+            .limit(limit)
+            .sort({ createdAt: -1 });
+            totalDiaries = await Diary.countDocuments({ category : req.query.category });
+        }
+
+        res.status(200).json({
+            success: true,
+            list: diaries,
+            currentPage: page,
+            totalPages: Math.ceil(totalDiaries / limit),
+            totalItems: totalDiaries,
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: '서버 에러가 발생했습니다.',
+            error: error.message,
+        });
     }
 });
 
@@ -61,7 +100,7 @@ router.post("/write", async(req, res) => {
 // 카테고리 별 검색
 router.get("/search", async (req, res) => {
     try {
-        const diary = await Diary.find({ category : req.query.category }).sort({ createdAt: -1 });
+        const diary = await Diary.find({ title: { $regex: req.query.title, $options: 'i' } }).sort({ createdAt: -1 });
         res.json({ list: diary });
     } catch (err) {
         res.json({ message: false });
