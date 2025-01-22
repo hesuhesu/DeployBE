@@ -107,12 +107,11 @@ mongoose.connect(process.env.MONGO_URI, {
   console.error('Failed to connect to MongoDB', err);
 });
 
-/*
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-*/
 
+/*
 // HTTPS 서버 설정
 const sslOptions = {
   key: fs.readFileSync('./privkey.pem'), // 개인 키 파일
@@ -123,3 +122,4 @@ const sslOptions = {
 https.createServer(sslOptions, app).listen(PORT, () => {
   console.log(`HTTPS Server running on ${PORT}`);
 });
+*/
