@@ -22,7 +22,7 @@ app.use(express.json({
   limit : "1mb"
 }));
 app.use(cors({
-  origin: 'https://hesuhesu.o-r.kr:3000', // 프론트엔드 도메인
+  origin: ['https://hesuhesu.o-r.kr', 'https://hesuhesu.o-r.kr:5000'], // 프론트엔드 도메인
   credentials: true, // 쿠키 전달을 허용
 }));
 app.use(cookieParser());
